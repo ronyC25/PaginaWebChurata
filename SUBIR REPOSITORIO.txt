@@ -7,3 +7,10 @@ git commit -m "first commit"
 git branch -M main
 git remote add origin https://github.com/ronyC25/PaginaWebChurata.git
 git push -u origin main
+
+Cuando ya esta creado:
+°°°°°°°°°°°°°°°°°°°°°°
+
+git remote add origin https://github.com/ronyC25/PaginaWebChurata.git
+git branch -M main
+git push -u origin main
