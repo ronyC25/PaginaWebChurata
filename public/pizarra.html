@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizarra Interactiva</title>
+  <link rel="stylesheet" href="pizarra.css">
+</head>
+<body>
+  <header>
+    <h1>Pizarra Interactiva</h1>
+    <p>Bienvenido, <span id="username"></span></p>
+  </header>
+  <div class="toolbar">
+    <button id="clear">Borrar</button>
+    <input type="color" id="colorPicker">
+    <input type="range" id="sizePicker" min="1" max="10" value="5">
+  </div>
+  <canvas id="canvas" width="800" height="600"></canvas>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const username = localStorage.getItem('username');
+    document.getElementById('username').textContent = username;
+
+    let drawing = false;
+    let color = '#000000';
+    let size = 5;
+
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mouseup', () => {
+      drawing = false;
+      context.beginPath();
+    });
+    canvas.addEventListener('mousemove', draw);
+
+    document.getElementById('clear').addEventListener('click', clearCanvas);
+    document.getElementById('colorPicker').addEventListener('input', (event) => color = event.target.value);
+    document.getElementById('sizePicker').addEventListener('input', (event) => size = event.target.value);
+
+    function draw(event) {
+      if (!drawing) return;
+      const { offsetX, offsetY } = event;
+      context.lineWidth = size;
+      context.strokeStyle = color;
+      context.lineCap = 'round';
+
+      context.lineTo(offsetX, offsetY);
+      context.stroke();
+      context.beginPath();
+      context.moveTo(offsetX, offsetY);
+
+      socket.emit('draw', { offsetX, offsetY, color, size });
+    }
+
+    socket.on('draw', (data) => {
+      const { offsetX, offsetY, color, size } = data;
+      context.lineWidth = size;
+      context.strokeStyle = color;
+      context.lineCap = 'round';
+
+      context.lineTo(offsetX, offsetY);
+      context.stroke();
+      context.beginPath();
+      context.moveTo(offsetX, offsetY);
+    });
+
+    function clearCanvas() {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      socket.emit('clear');
+    }
+
+    socket.on('clear', () => context.clearRect(0, 0, canvas.width, canvas.height));
+  </script>
+</body>
+</html>
