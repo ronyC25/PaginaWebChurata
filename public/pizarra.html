@@ -29,43 +29,54 @@
     let drawing = false;
     let color = '#000000';
     let size = 5;
+    let lastX, lastY;
 
-    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mousedown', (event) => {
+      drawing = true;
+      lastX = event.offsetX;
+      lastY = event.offsetY;
+    });
+
     canvas.addEventListener('mouseup', () => {
       drawing = false;
       context.beginPath();
     });
-    canvas.addEventListener('mousemove', draw);
+
+    canvas.addEventListener('mousemove', (event) => {
+      if (!drawing) return;
+      draw(event.offsetX, event.offsetY);
+      socket.emit('draw', { lastX, lastY, offsetX: event.offsetX, offsetY: event.offsetY, color, size });
+      lastX = event.offsetX;
+      lastY = event.offsetY;
+    });
 
     document.getElementById('clear').addEventListener('click', clearCanvas);
     document.getElementById('colorPicker').addEventListener('input', (event) => color = event.target.value);
     document.getElementById('sizePicker').addEventListener('input', (event) => size = event.target.value);
 
-    function draw(event) {
-      if (!drawing) return;
-      const { offsetX, offsetY } = event;
+    function draw(x, y) {
       context.lineWidth = size;
       context.strokeStyle = color;
       context.lineCap = 'round';
-
-      context.lineTo(offsetX, offsetY);
+      
+      context.beginPath();
+      context.moveTo(lastX, lastY);
+      context.lineTo(x, y);
       context.stroke();
       context.beginPath();
-      context.moveTo(offsetX, offsetY);
-
-      socket.emit('draw', { offsetX, offsetY, color, size });
     }
 
     socket.on('draw', (data) => {
-      const { offsetX, offsetY, color, size } = data;
+      const { lastX, lastY, offsetX, offsetY, color, size } = data;
       context.lineWidth = size;
       context.strokeStyle = color;
       context.lineCap = 'round';
 
+      context.beginPath();
+      context.moveTo(lastX, lastY);
       context.lineTo(offsetX, offsetY);
       context.stroke();
       context.beginPath();
-      context.moveTo(offsetX, offsetY);
     });
 
     function clearCanvas() {

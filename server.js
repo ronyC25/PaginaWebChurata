@@ -6,10 +6,8 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-// Configurar la carpeta de archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Servir la página de inicio de sesión como la página principal
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });

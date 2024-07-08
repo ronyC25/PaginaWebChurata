@@ -1,41 +1,60 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: #f0f0f0;
-  }
-  
-  header {
-    background-color: #007bff;
-    color: white;
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .toolbar {
-    background-color: #f8f9fa;
-    padding: 10px;
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  .toolbar button {
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .toolbar button:hover {
-    background-color: #e2e6ea;
-  }
-  
-  canvas {
-    border: 1px solid #ccc;
-    flex-grow: 1;
-    cursor: crosshair;
-  }
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
 
-  
+header {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+}
+
+header p {
+  margin: 5px 0;
+}
+
+.toolbar {
+  background-color: #ffffff;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar button {
+  padding: 10px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toolbar button:hover {
+  background-color: #0056b3;
+}
+
+.toolbar input[type="color"],
+.toolbar input[type="range"] {
+  padding: 5px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+
+canvas {
+  border: 1px solid #cccccc;
+  flex-grow: 1;
+  cursor: crosshair;
+}
