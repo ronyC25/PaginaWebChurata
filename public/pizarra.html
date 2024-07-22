@@ -4,87 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pizarra Interactiva</title>
-  <link rel="stylesheet" href="pizarra.css">
+  <link rel="stylesheet" href="styles/pizarra.css">
 </head>
 <body>
   <header>
     <h1>Pizarra Interactiva</h1>
-    <p>Bienvenido, <span id="username"></span></p>
+    <p id="username"></p>
   </header>
   <div class="toolbar">
     <button id="clear">Borrar</button>
     <input type="color" id="colorPicker">
     <input type="range" id="sizePicker" min="1" max="10" value="5">
+    <button id="pencil">Lápiz</button>
+    <button id="eraser">Borrador</button>
+    <button id="save">Guardar</button>
+    <input type="file" id="load" accept="image/*">
+    <button id="addText">Añadir Texto</button>
+    <input type="text" id="textInput" placeholder="Escribe aquí">
+    <button id="undo">Deshacer</button>
+    <button id="redo">Rehacer</button>
   </div>
   <canvas id="canvas" width="800" height="600"></canvas>
-
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-    const canvas = document.getElementById('canvas');
-    const context = canvas.getContext('2d');
-    const username = localStorage.getItem('username');
-    document.getElementById('username').textContent = username;
-
-    let drawing = false;
-    let color = '#000000';
-    let size = 5;
-    let lastX, lastY;
-
-    canvas.addEventListener('mousedown', (event) => {
-      drawing = true;
-      lastX = event.offsetX;
-      lastY = event.offsetY;
-    });
-
-    canvas.addEventListener('mouseup', () => {
-      drawing = false;
-      context.beginPath();
-    });
-
-    canvas.addEventListener('mousemove', (event) => {
-      if (!drawing) return;
-      draw(event.offsetX, event.offsetY);
-      socket.emit('draw', { lastX, lastY, offsetX: event.offsetX, offsetY: event.offsetY, color, size });
-      lastX = event.offsetX;
-      lastY = event.offsetY;
-    });
-
-    document.getElementById('clear').addEventListener('click', clearCanvas);
-    document.getElementById('colorPicker').addEventListener('input', (event) => color = event.target.value);
-    document.getElementById('sizePicker').addEventListener('input', (event) => size = event.target.value);
-
-    function draw(x, y) {
-      context.lineWidth = size;
-      context.strokeStyle = color;
-      context.lineCap = 'round';
-      
-      context.beginPath();
-      context.moveTo(lastX, lastY);
-      context.lineTo(x, y);
-      context.stroke();
-      context.beginPath();
-    }
-
-    socket.on('draw', (data) => {
-      const { lastX, lastY, offsetX, offsetY, color, size } = data;
-      context.lineWidth = size;
-      context.strokeStyle = color;
-      context.lineCap = 'round';
-
-      context.beginPath();
-      context.moveTo(lastX, lastY);
-      context.lineTo(offsetX, offsetY);
-      context.stroke();
-      context.beginPath();
-    });
-
-    function clearCanvas() {
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      socket.emit('clear');
-    }
-
-    socket.on('clear', () => context.clearRect(0, 0, canvas.width, canvas.height));
-  </script>
+  <script src="js/pizarra.js"></script>
 </body>
 </html>

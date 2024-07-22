@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio de Sesión - Pizarra Interactiva</title>
-  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="styles/login.css">
 </head>
 <body>
   <div class="login-container">
@@ -21,20 +21,7 @@
       <button type="submit">Entrar</button>
     </form>
   </div>
-
-  <script>
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-
-      if (username && password) {
-        localStorage.setItem('username', username);
-        window.location.href = 'pizarra.html';
-      } else {
-        alert('Nombre de usuario o contraseña incorrectos');
-      }
-    });
-  </script>
+  <script src="js/login.js"></script>
 </body>
 </html>
+ 

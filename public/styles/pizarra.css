@@ -12,6 +12,7 @@ header {
   color: white;
   padding: 10px;
   text-align: center;
+  margin-bottom: 20px;
 }
 
 header h1 {
@@ -24,6 +25,8 @@ header p {
 
 .toolbar {
   background-color: #ffffff;
+  gap: 10px;
+  margin-bottom: 20px;
   padding: 10px;
   display: flex;
   justify-content: space-between;
